@@ -996,8 +996,8 @@ impl<T> Option<T> {
     ///
     /// This is slightly different from how `;` works, which "ignores" a return
     /// value by turning the entire expression into a `()`. If we are interested
-    /// only in whether the operation succeeded or not and not in any internal
-    /// return value it may have had, then `void` allows this shorthand:
+    /// only in whether the operation succeeded and not in any internal return
+    /// value it may have had, then `void` allows this shorthand:
     ///
     /// ```
     /// fn is_empty<T>(v: &[T]) -> Option<()> {

@@ -889,6 +889,38 @@ impl<T, E> Result<T, E> {
             Err(e) => e,
         }
     }
+
+    /// Ignores the result of some `Result`-based operation, while remaining
+    /// within the context of `Result`.
+    ///
+    /// This is slightly different from how `;` works, which "ignores" a return
+    /// value by turning the entire expression into a `()`. If we are interested
+    /// only in whether the operation succeeded and not in any internal return
+    /// value it may have had, then `void` allows this shorthand:
+    ///
+    /// ```
+    /// use std::process::Command;
+    ///
+    /// fn ls() -> Result<(), std::io::Error> {
+    ///     Command::new("ls").status().void()
+    /// }
+    /// ```
+    ///
+    /// As opposed to:
+    ///
+    /// ```
+    /// use std::process::Command;
+    ///
+    /// fn ls() -> Result<(), std::io::Error> {
+    ///     Command::new("ls").status()?;
+    ///     Ok(())
+    /// }
+    /// ```
+    #[inline]
+    #[stable(feature = "option_result_void", since = "1.54.0")]
+    pub fn void(self) -> Result<(), E> {
+        self.map(|_| ())
+    }
 }
 
 impl<T: Copy, E> Result<&T, E> {
