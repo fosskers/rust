@@ -991,6 +991,42 @@ impl<T> Option<T> {
         mem::replace(self, Some(value))
     }
 
+    /// Ignores the result of some `Option`al operation, while remaining within
+    /// the context of `Option`.
+    ///
+    /// This is slightly different from how `;` works, which "ignores" a return
+    /// value by turning the entire expression into a `()`. If we are interested
+    /// only in whether the operation succeeded or not and not in any internal
+    /// return value it may have had, then `void` allows this shorthand:
+    ///
+    /// ```
+    /// fn is_empty<T>(v: &[T]) -> Option<()> {
+    ///     v.first().void()
+    /// }
+    /// ```
+    ///
+    /// As opposed to:
+    ///
+    /// ```
+    /// fn is_empty<T>(v: &[T]) -> Option<()> {
+    ///     v.first()?;
+    ///     Some(())
+    /// }
+    /// ```
+    ///
+    /// # Examples
+    ///
+    /// ```
+    /// let x = Some(1);
+    /// assert_eq!(x.void(), Some(()));
+    /// assert_eq!(None.void(), None);
+    /// ```
+    #[inline]
+    #[stable(feature = "option_result_void", since = "1.54.0")]
+    pub fn void(self) -> Option<()> {
+        self.map(|_| ())
+    }
+
     /// Zips `self` with another `Option`.
     ///
     /// If `self` is `Some(s)` and `other` is `Some(o)`, this method returns `Some((s, o))`.
